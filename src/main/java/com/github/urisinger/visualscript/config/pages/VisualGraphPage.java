@@ -5,14 +5,17 @@ import cc.polyfrost.oneconfig.utils.InputHandler;
 import com.github.urisinger.visualscript.config.elements.BlockElements.BasicBlockElement;
 import com.github.urisinger.visualscript.config.elements.MenuElement;
 import com.google.gson.annotations.Expose;
+import net.minecraft.util.Tuple;
 import org.lwjgl.input.Keyboard;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class VisualGraphPage extends Page {
 
     @Expose
-    public BasicBlockElement test = new BasicBlockElement("Main");
+    public List<BasicBlockElement> elements = new ArrayList<>();
     @Expose
     public float scrollX = 0, scrollY = 0;
 
@@ -25,16 +28,19 @@ public class VisualGraphPage extends Page {
 
     public VisualGraphPage(String title) {
         super(title);
+        elements.add(new BasicBlockElement("On start"));
     }
 
     public void draw(long vg, int x, int y, InputHandler inputHandler) {
-        if(inputHandler.isMouseDown(1)){
 
-            if(menuElement != null && !wasClicked){
-                menuElement = null;
-            }
-            else if(!wasClicked){
-                menuElement = new MenuElement(inputHandler.mouseX(), inputHandler.mouseY(), Arrays.asList("new block", "option 2","option 3"));
+        if(inputHandler.isMouseDown(1)){
+            if(!wasClicked){
+                if(menuElement != null){
+                    menuElement = null;
+                }
+                else {
+                    menuElement = new MenuElement(inputHandler.mouseX(), inputHandler.mouseY(), Arrays.asList(new Tuple<>("New block", () -> this.elements.add(new BasicBlockElement(inputHandler.mouseX()-x,inputHandler.mouseY()-y    ,"wow")))));
+                }
             }
             wasClicked = true;
         }
@@ -44,7 +50,6 @@ public class VisualGraphPage extends Page {
 
 
         if(inputHandler.isMouseDown(0)){
-            menuElement = null;
 
             if(Keyboard.isKeyDown(Keyboard.KEY_LMENU)){
                 if(!isClicked){
@@ -68,11 +73,15 @@ public class VisualGraphPage extends Page {
             isClicked = false;
         }
 
-        test.draw(vg,scrollX,scrollY,inputHandler);
+        for (BasicBlockElement blockElement : elements) {
+            blockElement.draw(vg, scrollX, scrollY, inputHandler);
+        }
         if(menuElement != null){
             menuElement.draw(vg,scrollX,scrollY,inputHandler);
         }
-
+        if(inputHandler.isMouseDown(0)){
+            menuElement = null;
+        }
     }
 
     @Override

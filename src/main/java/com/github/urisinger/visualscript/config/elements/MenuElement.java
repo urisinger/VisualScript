@@ -15,11 +15,12 @@ public class MenuElement extends BasicElement {
 
     private float x, y;
     private List<Tuple<String, BasicButton>> menuElements;
-    public MenuElement(float x, float y, List<String> menuNames) {
+    public MenuElement(float x, float y, List<Tuple<String,Runnable>> menuNames) {
         super(150, (menuNames.size())*50, ColorPalette.SECONDARY, false);
         this.menuElements = new ArrayList<>(menuNames.size());
         for(int i = 0; i < menuNames.size(); i++){
-            this.menuElements.add(new Tuple<>(menuNames.get(i), new BasicButton(150,50,menuNames.get(i),BasicButton.ALIGNMENT_CENTER,ColorPalette.SECONDARY)));
+            this.menuElements.add(new Tuple<>(menuNames.get(i).getFirst(), new BasicButton(150,50,menuNames.get(i).getFirst(),BasicButton.ALIGNMENT_CENTER,ColorPalette.SECONDARY)));
+            this.menuElements.get(i).getSecond().setClickAction(menuNames.get(i).getSecond());
         }
         this.x = x;
         this.y = y;

@@ -22,11 +22,15 @@ public class BasicBlockElement extends BasicElement {
     private float lastX, lastY;
     private boolean isClicked = false;
     private int selectedElement = -1;
-
-    public BasicBlockElement(String name) {
+    public BasicBlockElement(float x, float y, String name){
         super(150 , 50, ColorPalette.PRIMARY, true);
         this.name = name;
         addElement("on finish");
+        this.x = x;
+        this.y = y;
+    }
+    public BasicBlockElement(String name) {
+        this(0,0,name);
     }
     public void addElement(String key){
         connectedElements.add(new Pair<>(key,null));
